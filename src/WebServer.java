@@ -17,10 +17,11 @@ public class WebServer {
     private String contentType;
     private String typeOfFile;
 
-    private static final String pathDirTest = "./src/main/www/test/";
-    private static final String pathDirImages = "./src/main/www/images/";
-    private static final String error404 = "./src/main/www/404.html";
-    private static final String indexDir = "./src/main/www/index.html";
+    private static final String PATH_POEM = "./src/poem/";
+    private static final String PATH_IMAGES = "./src/images/";
+    private static final String ERROR_404 = "./src/404.html";
+    private static final String MAIN_PAGE = "./src/main-page.html";
+    private static final String URL_CS50 = "https://www.youtube.com/watch?v=LfaMVlDaQ24&ab_channel=freeCodeCamp.org";
 
     /**
      * This method sets up a server socket on port 8080 and continuously listens for client connections
@@ -28,7 +29,7 @@ public class WebServer {
      */
     public void serverCom() {
         try {
-            serverSocket = new ServerSocket(8080);
+            serverSocket = new ServerSocket(8088);
             System.out.println("Server started. Listening for messages.");
             while (true) {
                 handleClientConnection();
@@ -73,18 +74,18 @@ public class WebServer {
     private boolean handleResourceRequest(String resource) throws IOException {
         switch (resource) {
             case "/":
-                sendFile(indexDir);
+                sendFile(MAIN_PAGE);
                 return true;
-            case "/images/logo.png":
-            case "/images/index-online.png":
-                sendFile(pathDirImages + resource.substring(resource.lastIndexOf("/")));
+            case "/images/java-logo.png":
+            case "/images/javascript-logo.png":
+                sendFile(PATH_IMAGES + resource.substring(resource.lastIndexOf("/")));
                 return true;
-            case "/test/index.html":
-            case "/test/test.html":
-                sendFile(pathDirTest + resource.substring(resource.lastIndexOf("/")));
+            case "/poem/sonnet-18.html":
+            case "/poem/the-new-colossus.html":
+                sendFile(PATH_POEM + resource.substring(resource.lastIndexOf("/")));
                 return true;
-            case "/video1":
-                redirectToYoutube("https://www.youtube.com/watch?v=U7lIBu1IolI");
+            case "/cs50":
+                redirectToYoutube(URL_CS50);
                 return true;
             default:
                 return false;
@@ -183,7 +184,7 @@ public class WebServer {
      */
 
     private void send404() throws IOException {
-        File file404 = new File(error404);
+        File file404 = new File(ERROR_404);
         try (FileInputStream fileInputStream404 = new FileInputStream(file404)) {
             writeResponseHeaders(404, "Not Found", typeOfFile + contentType, file404.length());
             outputStream.write(fileInputStream404.readAllBytes());
