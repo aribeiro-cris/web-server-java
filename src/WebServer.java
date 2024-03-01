@@ -11,7 +11,6 @@ public class WebServer {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private BufferedReader inputBufferedReader;
-    private BufferedWriter outputBufferedWriter;
     private InputStream inputStream;
     private OutputStream outputStream;
     private String contentType;
@@ -100,7 +99,6 @@ public class WebServer {
         inputStream = clientSocket.getInputStream();
         outputStream = clientSocket.getOutputStream();
         inputBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        outputBufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
     }
 
     /**
@@ -168,7 +166,7 @@ public class WebServer {
                 outputStream.flush();
             } catch (SocketException e) {
                 if (e.getMessage().equals("Broken pipe")) {
-                    System.err.println("Client closed the connection before the file was fully sent.");
+                    System.out.println("Client closed the connection before the file was fully sent.");
                 } else {
                     throw e;
                 }
@@ -208,11 +206,10 @@ public class WebServer {
      * @throws IOException
      */
     private void closingStreamAndBuffers() throws IOException {
-        clientSocket.close();
         outputStream.close();
         inputStream.close();
         inputBufferedReader.close();
-        outputBufferedWriter.close();
+        clientSocket.close();
     }
 
     public static void main(String[] args) {
